@@ -1,0 +1,239 @@
+PROBLEM #1 UNIVERSITY SYSTEM
+
+
+Table Creation:
+
+-- Create students table
+CREATE TABLE students (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    school_enrollment_date DATE
+);
+
+-- Create professors table
+CREATE TABLE professors (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department VARCHAR(100)
+);
+
+-- Create courses table
+CREATE TABLE courses (
+    id SERIAL PRIMARY KEY,
+    course_name VARCHAR(100),
+    course_description TEXT,
+    professor_id INTEGER REFERENCES professors(id)
+);
+
+-- Create enrollments table
+CREATE TABLE enrollments (
+    student_id INTEGER REFERENCES students(id),
+    course_id INTEGER REFERENCES courses(id),
+    enrollment_date DATE,
+    PRIMARY KEY (student_id, course_id)
+);
+
+
+Messages:
+CREATE TABLE
+
+Query returned successfully in 24 msec.
+
+
+
+
+
+Insert Data:
+
+-- Insert students
+INSERT INTO students (first_name, last_name, email, school_enrollment_date)
+VALUES
+('John', 'Doe', 'john.doe@email.com', '2023-09-01'),
+('Jane', 'Smith', 'jane.smith@email.com', '2022-08-15'),
+('Bob', 'Johnson', 'bob.j@email.com', '2021-06-10'),
+('Alice', 'Brown', 'alice.b@email.com', '2023-01-05'),
+('Charlie', 'White', 'charlie.w@email.com', '2020-05-20');
+
+-- Insert professors
+INSERT INTO professors (first_name, last_name, department)
+VALUES
+('Dr. Emily', 'White', 'Physics'),
+('Dr. Michael', 'Green', 'Mathematics'),
+('Dr. Sarah', 'Black', 'Computer Science'),
+('Dr. Robert', 'Gray', 'Engineering');
+
+-- Insert courses
+INSERT INTO courses (course_name, course_description, professor_id)
+VALUES
+('Physics 101', 'Basic physics concepts', 1),
+('Calculus I', 'Intro to calculus', 2),
+('Programming Basics', 'Intro to programming', 3);
+
+-- Insert enrollments
+INSERT INTO enrollments (student_id, course_id, enrollment_date)
+VALUES
+(1, 1, '2024-01-10'),
+(2, 1, '2024-01-11'),
+(3, 2, '2024-01-12'),
+(4, 3, '2024-01-13'),
+(5, 1, '2024-01-14');
+
+Messages:
+
+INSERT 0 5
+
+Query returned successfully in 25 msec.
+
+
+
+Verify Data:
+
+-- Verify students data
+SELECT * FROM students;
+
+Output:
+id | first_name | last_name | email | school_enrollment_date
+---+------------+------------+----------------------+------------------------
+1  | John      | Doe        | john.doe@email.com   | 2023-09-01
+2  | Jane      | Smith      | jane.smith@email.com | 2022-08-15
+3  | Bob       | Johnson    | bob.j@email.com      | 2021-06-10
+4  | Alice     | Brown      | alice.b@email.com    | 2023-01-05
+5  | Charlie   | White      | charlie.w@email.com  | 2020-05-20
+
+
+
+
+
+-- Verify professors data
+SELECT * FROM professors;
+
+Output:
+id | first_name | last_name | department
+---+------------+------------+---------------
+1  | Dr. Emily | White     | Physics
+2  | Dr. Michael | Green  | Mathematics
+3  | Dr. Sarah | Black   | Computer Science
+4  | Dr. Robert | Gray   | Engineering
+
+
+
+
+-- Verify courses data
+SELECT * FROM courses;
+
+Output:
+id | course_name         | course_description      | professor_id
+---+----------------------+------------------------+--------------
+1  | Physics 101         | Basic physics concepts | 1
+2  | Calculus I          | Intro to calculus      | 2
+3  | Programming Basics  | Intro to programming   | 3
+
+
+
+
+-- Verify enrollments data
+SELECT * FROM enrollments;
+
+Output:
+student_id | course_id | enrollment_date
+-----------+----------+-----------------
+1          | 1        | 2024-01-10
+2          | 1        | 2024-01-11
+3          | 2        | 2024-01-12
+4          | 3        | 2024-01-13
+5          | 1        | 2024-01-14
+
+
+
+
+
+Required Queries:
+
+-- Query: List all students in Physics 101
+SELECT CONCAT(first_name, ' ', last_name) AS full_name
+FROM students
+JOIN enrollments ON students.id = enrollments.student_id
+JOIN courses ON enrollments.course_id = courses.id
+WHERE courses.course_name = 'Physics 101';
+
+Output:
+full_name
+------------
+John Doe
+Jane Smith
+Charlie White
+
+
+
+
+
+-- Query: Get all courses & professor names
+SELECT courses.course_name, CONCAT(professors.first_name, ' ', professors.last_name) AS professor_name
+FROM courses
+JOIN professors ON courses.professor_id = professors.id;
+
+Output:
+course_name          | professor_name
+--------------------+-------------------
+Physics 101         | Dr. Emily White
+Calculus I          | Dr. Michael Green
+Programming Basics  | Dr. Sarah Black
+
+
+
+
+-- Query: List courses with students enrolled
+SELECT DISTINCT courses.course_name
+FROM courses
+JOIN enrollments ON courses.id = enrollments.course_id;
+
+Output:
+course_name
+------------
+Programming Basics
+Physics 101
+Calculus I
+
+
+
+
+
+Update and Deletion of Data:
+
+Update:
+-- Update a student's email
+UPDATE students
+SET email = 'john.doe@newemail.com'
+WHERE first_name = 'John' AND last_name = 'Doe';
+
+Messages:
+UPDATE 1
+
+Query returned successfully in 29 msec.
+
+
+
+Deletion:
+-- Remove a student from a course
+DELETE FROM enrollments
+WHERE student_id = 1 AND course_id = 1;
+
+Messages:
+DELETE 1
+
+Query returned successfully in 24 msec.
+
+
+
+
+
+
+
+
+
+
+
+
